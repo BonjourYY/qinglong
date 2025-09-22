@@ -1,1 +1,2 @@
-console.log(123);
+import axios from "axios";
+console.log(axios);
