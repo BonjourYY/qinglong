@@ -1,6 +1,4 @@
-import axios from "axios";
-import { a } from "../utils/http";
-console.log(a);
+import HTTP from "../utils/http.ts";
 
 let username = "";
 let password = "";
@@ -19,19 +17,19 @@ const login = async () => {
   });
 
   // 调用接口
-  const { data } = await axios.post("https://uc.cztv.tv/api/auth/login/pwd", {
+  const { data } = await HTTP.post("https://uc.cztv.tv/api/auth/login/pwd", {
     username,
     password,
     with_applications: 1,
   });
 
-  token = data.data.access_token_for_clients["2024110112345678"];
+  token = data.access_token_for_clients["2024110112345678"];
 };
 
 // 签到
 const checkin = async () => {
   // 调用接口
-  const { data } = await axios.post(
+  await HTTP.post(
     "https://kcz.cztv.tv/api/v1/user/checkin",
     {
       client_id: "rongmei",
@@ -42,19 +40,13 @@ const checkin = async () => {
       },
     }
   );
-
-  console.log(data);
 };
 
 // 执行
 const fn = async () => {
-  try {
-    await login();
-    await checkin();
-    console.log("✅✅✅ 签到成功 ✅✅✅");
-  } catch {
-    console.log("❌❌❌ 签到失败 ❌❌❌");
-  }
+  await login();
+  await checkin();
+  console.log("✅✅✅ 签到成功 ✅✅✅");
 };
 
 fn();

@@ -8,11 +8,17 @@ importers:
 
   .:
     devDependencies:
+      '@types/node':
+        specifier: ^24.9.1
+        version: 24.9.1
       axios:
         specifier: ^1.12.2
         version: 1.12.2
 
 packages:
+
+  '@types/node@24.9.1':
+    resolution: {integrity: sha512-QoiaXANRkSXK6p0Duvt56W208du4P9Uye9hWLWgGMDTEoKPhuenzNcC4vGUmrNkiOKTlIrBoyNQYNpSwfEZXSg==}
 
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
@@ -107,7 +113,14 @@ packages:
   proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
 
+  undici-types@7.16.0:
+    resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
+
 snapshots:
+
+  '@types/node@24.9.1':
+    dependencies:
+      undici-types: 7.16.0
 
   asynckit@0.4.0: {}
 
@@ -202,3 +215,5 @@ snapshots:
       mime-db: 1.52.0
 
   proxy-from-env@1.1.0: {}
+
+  undici-types@7.16.0: {}
