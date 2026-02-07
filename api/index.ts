@@ -4,7 +4,11 @@ import { ArticleListResponse } from "./type.ts";
 // https://kcz.cztv.tv/api/v1
 
 // 获取 天下 栏目列表的文章
-export const getArticleList = ({ page }: { page: number }): Promise<ArticleListResponse> => {
+export const getArticleList = ({
+  page,
+}: {
+  page: number;
+}): Promise<ArticleListResponse> => {
   return HTTP.get(`homepage/column/80?page=${page}`);
 };
 
@@ -28,5 +32,5 @@ export const commentArticle = (
   params: { articleId: number },
   data: { content: string },
 ) => {
-  return HTTP.post(`article/${params.articleId}/comment`, { data });
+  return HTTP.post(`article/${params.articleId}/comment`, data);
 };
