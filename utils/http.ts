@@ -35,11 +35,10 @@ HTTP.interceptors.response.use(
   },
   // 非2XX状态码
   (error) => {
-    console.log(error);
-    // console.log(
-    //   `HTTP Error ${error.response.status}:`,
-    //   JSON.stringify(error.response.data, null, 2),
-    // );
+    console.log(
+      `HTTP Error ${error.response.status}:`,
+      JSON.stringify(error.response.data, null, 2),
+    );
     process.exit(1);
   },
 );
