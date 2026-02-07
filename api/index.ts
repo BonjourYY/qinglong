@@ -1,10 +1,10 @@
 import HTTP from "../utils/http.ts";
-// import { Res } from "./type.ts";
+import { ArticleListResponse } from "./type.ts";
 
 // https://kcz.cztv.tv/api/v1
 
 // 获取 天下 栏目列表的文章
-export const getArticleList = ({ page }: { page: number }) => {
+export const getArticleList = ({ page }: { page: number }): Promise<ArticleListResponse> => {
   return HTTP.get(`homepage/column/80?page=${page}`);
 };
 
