@@ -58,10 +58,10 @@ const fn = async () => {
       const article = articleList[i];
       await processArticle(article.id);
 
-      // 如果不是最后一篇文章，等待10秒
+      // 如果不是最后一篇文章，等待30秒
       if (i < articleList.length - 1) {
-        console.log("等待 10 秒后处理下一篇...\n");
-        await sleep(10000);
+        console.log("等待 30 秒后处理下一篇...\n");
+        await sleep(30000);
       }
     }
 
