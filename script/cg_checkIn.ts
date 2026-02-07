@@ -4,7 +4,9 @@
  */
 
 import {
+  startClient,
   getArticleList,
+  getVideoList,
   getArticleDetail,
   likeArticle,
   commentArticle,
@@ -24,6 +26,9 @@ const sleep = (ms: number): Promise<void> => {
 const processArticle = async (articleId: number) => {
   try {
     console.log(`开始处理文章 ID: ${articleId}`);
+
+    // 启动客户端
+    await startClient();
 
     // 获取文章详情
     await getArticleDetail({ articleId });
@@ -48,8 +53,11 @@ const processArticle = async (articleId: number) => {
 const fn = async () => {
   try {
     console.log("开始获取文章列表...\n");
-    const { data } = await getArticleList({ page: 1 });
-    const articleList = data.data;
+    const [articleRes, videoRes] = await Promise.all([
+      getArticleList({ page: 1 }),
+      getVideoList({ page: 2 }),
+    ]);
+    const articleList = [...articleRes.data.data, ...videoRes.data.data];
 
     console.log(`共获取到 ${articleList.length} 篇文章\n`);
 

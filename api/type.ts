@@ -4,8 +4,8 @@ export interface Res<T> {
   msg?: "";
 }
 
-// 文章列表项
-export interface Article {
+// 列表项（文章/视频通用）
+export interface ListItem {
   id: number;
   home_column_id: number;
   home_category_id: string;
@@ -34,7 +34,7 @@ export interface Thumbnail {
   src: string;
   width: string;
   height: string;
-  id: string;
+  id?: string;
 }
 
 // 广告配置
@@ -79,12 +79,12 @@ export interface PaginationMeta {
   total: number;
 }
 
-// 文章列表响应数据
-export interface ArticleListData {
-  data: Article[];
+// 分页列表响应数据
+export interface PaginatedListData {
+  data: ListItem[];
   links: PaginationLinks;
   meta: PaginationMeta;
 }
 
-// 文章列表完整响应类型
-export type ArticleListResponse = Res<ArticleListData>;
+// 分页列表完整响应类型
+export type PaginatedListResponse = Res<PaginatedListData>;

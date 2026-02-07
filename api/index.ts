@@ -1,19 +1,28 @@
 import HTTP from "../utils/http.ts";
-import { ArticleListResponse } from "./type.ts";
+import { PaginatedListResponse } from "./type.ts";
 
 // https://kcz.cztv.tv/api/v1
+
+// 启动客户端
+export const startClient = () => {
+  return HTTP.get("system/settings?version=4");
+};
 
 // 获取 天下 栏目列表的文章
 export const getArticleList = ({
   page,
 }: {
   page: number;
-}): Promise<ArticleListResponse> => {
+}): Promise<PaginatedListResponse> => {
   return HTTP.get(`homepage/column/80?page=${page}`);
 };
 
 // 获取 视频 栏目列表的视频
-export const getVideoList = ({ page }: { page: number }) => {
+export const getVideoList = ({
+  page,
+}: {
+  page: number;
+}): Promise<PaginatedListResponse> => {
   return HTTP.get(`homepage/column/75?page=${page}`);
 };
 
