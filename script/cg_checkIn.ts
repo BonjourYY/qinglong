@@ -29,6 +29,7 @@ const processArticle = async (articleId: number) => {
 
     // 启动客户端
     await startClient();
+    console.log(`✓ 启动客户端成功: ${articleId}`);
 
     // 获取文章详情
     await getArticleDetail({ articleId });
