@@ -1,8 +1,3 @@
-/*
-cron: 5 0 * * *
-new Env('常观签到');
-*/
-
 import HTTP from "../utils/http.ts";
 
 let username = "";
