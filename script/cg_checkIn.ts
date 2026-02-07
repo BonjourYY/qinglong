@@ -1,3 +1,8 @@
+/**
+ * cron: 30 8 * * *
+ * new Env('某某签到任务');
+ */
+
 // import HTTP from "../utils/http.ts";
 
 // let username = "";
