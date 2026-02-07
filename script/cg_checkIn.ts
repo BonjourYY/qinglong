@@ -1,7 +1,6 @@
-/**
- * cron: 30 8 * * *
- * new Env('某某签到任务');
- */
+/*
+cron: 0 0 1 1 *
+*/
 
 // import HTTP from "../utils/http.ts";
 
