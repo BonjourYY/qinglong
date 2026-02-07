@@ -5,7 +5,7 @@ import axios from "axios";
 
 let accessToken = "";
 
-QLAPI.getEnvs({ searchValue: "cg_token" }).then((x) => {
+const tokenReady = QLAPI.getEnvs({ searchValue: "cg_token" }).then((x) => {
   accessToken = x.data[0].value;
 });
 
@@ -13,13 +13,14 @@ const HTTP = axios.create({
   baseURL: "https://kcz.cztv.tv/api/v1",
   headers: {
     "Content-Type": "application/json;charset=utf-8",
-    Authorization: `Bearer ${accessToken}`,
   },
 });
 
-// 请求拦截器
+// 请求拦截器：等待 token 就绪后动态注入 Authorization
 HTTP.interceptors.request.use(
-  (config) => {
+  async (config) => {
+    await tokenReady;
+    config.headers.Authorization = `Bearer ${accessToken}`;
     return config;
   },
   (error) => {
