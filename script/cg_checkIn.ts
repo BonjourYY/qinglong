@@ -3,6 +3,7 @@
  * new Env('常观每日任务');
  */
 
+import axios from "axios";
 import {
   startClient,
   getArticleList,
@@ -43,8 +44,21 @@ const processArticle = async (articleId: number) => {
     console.log(`✓ 启动客户端成功: ${articleId}`);
 
     // 获取文章详情
-    await getArticleDetail({ articleId });
+    const detail = await getArticleDetail({ articleId });
     console.log(`✓ 获取文章详情成功: ${articleId}`);
+
+    // 请求文章缩略图
+    const thumbnails = detail?.data?.thumbnails ?? [];
+    for (const thumb of thumbnails) {
+      if (thumb.src) {
+        try {
+          await axios.get(thumb.src);
+          console.log(`✓ 请求缩略图成功: ${thumb.src}`);
+        } catch {
+          console.log(`✗ 请求缩略图失败: ${thumb.src}`);
+        }
+      }
+    }
 
     // 点赞文章
     await likeArticle({ articleId });
