@@ -13,14 +13,6 @@ import {
   commentArticle,
   shareArticle,
 } from "../api/index.ts";
-import comments from "../utils/content.json" with { type: "json" };
-
-// 从 content.json 中随机取一条评论
-const getRandomComment = (): string => {
-  const index = Math.floor(Math.random() * comments.length);
-  return comments[index].content;
-};
-
 // 延迟函数
 const sleep = (ms: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -84,10 +76,9 @@ const processArticle = async (articleId: string, articleTitle: string) => {
     await likeArticle({ articleId });
     console.log(`✓ 点赞文章成功: ${articleId}`);
 
-    // 评论文章（随机从 content.json 中取一条）
-    const randomComment = getRandomComment();
-    await commentArticle({ articleId }, { content: randomComment });
-    console.log(`✓ 评论文章成功: ${articleId}, 评论内容: ${randomComment}`);
+    // 评论文章（使用文章标题作为评论内容）
+    await commentArticle({ articleId }, { content: articleTitle });
+    console.log(`✓ 评论文章成功: ${articleId}, 评论内容: ${articleTitle}`);
 
     console.log(`文章 ${articleId} 处理完成\n`);
   } catch (error) {
