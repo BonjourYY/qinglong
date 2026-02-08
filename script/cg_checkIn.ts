@@ -48,7 +48,7 @@ const processArticle = async (articleId: number) => {
     console.log(`✓ 获取文章详情成功: ${articleId}`);
 
     // 请求文章缩略图
-    const thumbnails = detail?.data?.thumbnails ?? [];
+    const thumbnails = detail?.data?.data?.thumbnails ?? [];
     for (const thumb of thumbnails) {
       if (thumb.src) {
         try {
