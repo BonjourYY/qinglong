@@ -35,9 +35,9 @@ const sleep = (ms: number): Promise<void> => {
 };
 
 // 处理单篇文章
-const processArticle = async (articleId: number) => {
+const processArticle = async (articleId: string, articleTitle: string) => {
   try {
-    console.log(`开始处理文章 ID: ${articleId}`);
+    console.log(`开始处理文章 : ${articleTitle}`);
 
     // 启动客户端
     await startClient();
@@ -109,7 +109,7 @@ const fn = async () => {
     // 遍历文章列表
     for (let i = 0; i < articleList.length; i++) {
       const article = articleList[i];
-      await processArticle(article.id);
+      await processArticle(article.redirectable.redirectable_id, article.title);
 
       // 如果不是最后一篇文章，等待30秒
       if (i < articleList.length - 1) {

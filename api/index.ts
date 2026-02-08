@@ -27,18 +27,18 @@ export const getVideoList = ({
 };
 
 // 获取文章详情数据
-export const getArticleDetail = ({ articleId }: { articleId: number }) => {
+export const getArticleDetail = ({ articleId }: { articleId: string }) => {
   return HTTP.get(`article/${articleId}`);
 };
 
 // 点赞文章
-export const likeArticle = ({ articleId }: { articleId: number }) => {
+export const likeArticle = ({ articleId }: { articleId: string }) => {
   return HTTP.post(`article/${articleId}/like`);
 };
 
 // 评论文章
 export const commentArticle = (
-  params: { articleId: number },
+  params: { articleId: string },
   data: { content: string },
 ) => {
   return HTTP.post(`article/${params.articleId}/comment`, data);
