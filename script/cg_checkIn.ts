@@ -12,6 +12,7 @@ import {
   commentArticle,
   shareArticle,
 } from "../api/index.ts";
+import comments from "../utils/content.json" with { type: "json" };
 
 const articleToken = [
   "eyJpdiI6IkdoUXVqbkpmVkRUa2hGVDR4SjZHQXc9PSIsInZhbHVlIjoiYkowNkxDM3IzNExPR0MvZjh4MGpYaGU1QW4xT2Zac2NmSzdTN29LQkt3eUsvVG9pTGl3aGxZOGx1Rkczc21pMmllN1hlMmRsQTg4U2Mzb3liK2tGd3liV2JrV3pjMlBLQlVEaW8xdnlPbVU9IiwibWFjIjoiMTc1ZTdlMzg2NmQ3YmYwZWUzMjI0YTViYjk0ZTUzMmQ4Y2QxM2EyODJjOGQ2ZmEyNGViNWY4NmQ3MDY3M2RhNiIsInRhZyI6IiJ9",
@@ -21,9 +22,10 @@ const articleToken = [
   "eyJpdiI6ImZ5RDQ5Q0dLK3IwOXRWczUrNXd4UWc9PSIsInZhbHVlIjoickwyRmpoK2hmaTFGTXFWdkNSbHpRSEpwNEdzMmh3ZGtSM2lMZFlsSlRuNXlMRTJLaEF2Y1J2cjJoemRzWkRmTXBzY294ampXc1NnR1Q1akY3UzJqK1A3NVN5TkdZNEI4STQ2QzZpVjNMcnM9IiwibWFjIjoiZDAzMWI5N2U2ZDJhZTE5ZWUzYmEwMDA5ODIxNGIzMGViMTZlYmNiMmFiZTBiMjVkMWZjMGQzNTA5ZTZiYjIzNCIsInRhZyI6IiJ9",
 ];
 
-// 生成随机5位数字字符串
-const generateRandomComment = (): string => {
-  return Math.floor(10000 + Math.random() * 90000).toString();
+// 从 content.json 中随机取一条评论
+const getRandomComment = (): string => {
+  const index = Math.floor(Math.random() * comments.length);
+  return comments[index].content;
 };
 
 // 延迟函数
@@ -48,8 +50,8 @@ const processArticle = async (articleId: number) => {
     await likeArticle({ articleId });
     console.log(`✓ 点赞文章成功: ${articleId}`);
 
-    // 评论文章（随机5位数字）
-    const randomComment = generateRandomComment();
+    // 评论文章（随机从 content.json 中取一条）
+    const randomComment = getRandomComment();
     await commentArticle({ articleId }, { content: randomComment });
     console.log(`✓ 评论文章成功: ${articleId}, 评论内容: ${randomComment}`);
 
