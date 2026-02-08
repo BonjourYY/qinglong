@@ -15,14 +15,6 @@ import {
 } from "../api/index.ts";
 import comments from "../utils/content.json" with { type: "json" };
 
-const articleToken = [
-  "eyJpdiI6IkdoUXVqbkpmVkRUa2hGVDR4SjZHQXc9PSIsInZhbHVlIjoiYkowNkxDM3IzNExPR0MvZjh4MGpYaGU1QW4xT2Zac2NmSzdTN29LQkt3eUsvVG9pTGl3aGxZOGx1Rkczc21pMmllN1hlMmRsQTg4U2Mzb3liK2tGd3liV2JrV3pjMlBLQlVEaW8xdnlPbVU9IiwibWFjIjoiMTc1ZTdlMzg2NmQ3YmYwZWUzMjI0YTViYjk0ZTUzMmQ4Y2QxM2EyODJjOGQ2ZmEyNGViNWY4NmQ3MDY3M2RhNiIsInRhZyI6IiJ9",
-  ,
-  "eyJpdiI6IkpWWlIwYXIvTmsxUzlrVEtYR3haS1E9PSIsInZhbHVlIjoiSDlxOXJhNDd5Ump3bjZKUTB4VmpzM08zNGFJTjN6bzZnSndhbDdSaFA1b254UFR3RjBRblpyRmhOTXhHOW5WaDFMTTVaSndpdko0ckVqMG1aeVhtWGlkTlJlOTBSNU43T1RrOVEzUTk0Kzg9IiwibWFjIjoiZGZlMTRjZDkzNTQ1M2RjMTA1MTVlNDY4NzkwODc1ZGRjMTA0ODMyNmU3ZjA3ZDYzZTY2ZDc1NTA0OTIyMzY4YiIsInRhZyI6IiJ9",
-  ,
-  "eyJpdiI6ImZ5RDQ5Q0dLK3IwOXRWczUrNXd4UWc9PSIsInZhbHVlIjoickwyRmpoK2hmaTFGTXFWdkNSbHpRSEpwNEdzMmh3ZGtSM2lMZFlsSlRuNXlMRTJLaEF2Y1J2cjJoemRzWkRmTXBzY294ampXc1NnR1Q1akY3UzJqK1A3NVN5TkdZNEI4STQ2QzZpVjNMcnM9IiwibWFjIjoiZDAzMWI5N2U2ZDJhZTE5ZWUzYmEwMDA5ODIxNGIzMGViMTZlYmNiMmFiZTBiMjVkMWZjMGQzNTA5ZTZiYjIzNCIsInRhZyI6IiJ9",
-];
-
 // 从 content.json 中随机取一条评论
 const getRandomComment = (): string => {
   const index = Math.floor(Math.random() * comments.length);
@@ -32,6 +24,16 @@ const getRandomComment = (): string => {
 // 延迟函数
 const sleep = (ms: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
+// 从分享链接中提取 s_t 参数
+const extractShareToken = (shareLink: string): string | null => {
+  try {
+    const url = new URL(shareLink);
+    return url.searchParams.get("s_t");
+  } catch {
+    return null;
+  }
 };
 
 // 处理单篇文章
@@ -45,7 +47,25 @@ const processArticle = async (articleId: string, articleTitle: string) => {
 
     // 获取文章详情
     const detail = await getArticleDetail({ articleId });
-    console.log(`✓ 获取文章详情成功: ${articleId}`);
+    console.log(`✓ 阅读文章成功成功: ${articleId}`);
+
+    // 分享文章
+    const shareLink = detail?.data?.data?.share_config?.share_link;
+    if (shareLink) {
+      const s_t = extractShareToken(shareLink);
+      if (s_t) {
+        try {
+          await shareArticle({ s_t });
+          console.log(`✓ 分享文章成功: ${articleId}`);
+        } catch (error) {
+          console.error(`✗ 分享文章失败: ${articleId}`, error);
+        }
+      } else {
+        console.log(`✗ 未能从分享链接提取 s_t 参数: ${articleId}`);
+      }
+    } else {
+      console.log(`✗ 文章没有分享链接: ${articleId}`);
+    }
 
     // 请求文章缩略图
     const thumbnails = detail?.data?.data?.thumbnails ?? [];
@@ -78,31 +98,15 @@ const processArticle = async (articleId: string, articleTitle: string) => {
 // 完成每日任务
 const fn = async () => {
   try {
-    // 遍历 articleToken，依次分享文章
-    const tokens = articleToken.filter(
-      (t): t is string => typeof t === "string",
-    );
-    console.log(`开始分享文章，共 ${tokens.length} 个 token...\n`);
-    for (let i = 0; i < tokens.length; i++) {
-      try {
-        await shareArticle({ s_t: tokens[i] });
-        console.log(`✓ 分享文章成功 (${i + 1}/${tokens.length})`);
-      } catch (error) {
-        console.error(`✗ 分享文章失败 (${i + 1}/${tokens.length}):`, error);
-      }
-      if (i < tokens.length - 1) {
-        console.log("等待 10 秒后分享下一篇...\n");
-        await sleep(10000);
-      }
-    }
-    console.log("分享文章完成！\n");
-
     console.log("开始获取文章列表...\n");
     const [articleRes, videoRes] = await Promise.all([
       getArticleList({ page: 1 }),
       getVideoList({ page: 2 }),
     ]);
-    const articleList = [...articleRes.data.data, ...videoRes.data.data];
+    const articleList = [
+      ...articleRes.data.data.slice(0, 6),
+      ...videoRes.data.data.slice(0, 3),
+    ];
 
     console.log(`共获取到 ${articleList.length} 篇文章\n`);
 
