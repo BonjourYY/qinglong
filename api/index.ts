@@ -43,3 +43,8 @@ export const commentArticle = (
 ) => {
   return HTTP.post(`article/${params.articleId}/comment`, data);
 };
+
+// 分享文章
+export const shareArticle = (data: { s_t: string }) => {
+  return HTTP.post(`share-config/callback`, data);
+};

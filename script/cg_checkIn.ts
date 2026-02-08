@@ -10,7 +10,16 @@ import {
   getArticleDetail,
   likeArticle,
   commentArticle,
+  shareArticle,
 } from "../api/index.ts";
+
+const articleToken = [
+  "eyJpdiI6Im5nK2R0bndrc0RvM09XdFBWYTMwblE9PSIsInZhbHVlIjoidS8vcHBzZ2ptdFFxWmZxWmdzUkFYV1dUTXgzaVZITUhrUG1sQk9sR2FlUkxwdGN3eVFJOEZEdUZST2crQUgrdmtjZEpnTlQ5dllZaC9jMGM4NGowNzNLdWpFQ2c0RWIxTkdrdlM0UlJicmM9IiwibWFjIjoiOWNiOTRlNjg2Y2I5MDNlOWRmZjg0ZTc5N2RkODA2NmI2YjQwZmQwYmE4YzBjNmUzMTZlMzM4OTE5NDJjODViYiIsInRhZyI6IiJ9",
+  ,
+  "eyJpdiI6Im04MEI2cWdMc0tFSjVWRUZZdHRkbFE9PSIsInZhbHVlIjoiVmt0bTIzZWg5VytFbVpLMnlWdnVJN2t5d1drODQrMWZvdUVvQUpvOEVzamJBTXNrVytVSldja1NYenQza3ZmRTQrNkFRQ1dFcE4xalJDSUoyVTRtalh3VUJ6b2JKL0E2RkhvWmxXYnJUM3c9IiwibWFjIjoiMDFlNjZkNDEyNWFiYTljMmZkMDBjY2EwOWYzZjA1ZThjMWVlYTBkNzM1ZTQwNzFhMGIxYzE3OWM1YjVjNzgzMyIsInRhZyI6IiJ9",
+  ,
+  "eyJpdiI6ImhYMnZucWtOUzF4ZDlhZUhhQlRmbWc9PSIsInZhbHVlIjoiZHZnZjdtaWdPeGpHSGw4OGluK1Q1eXQvOEFQaURZRXFyNXFyWDNrNWJpdUlISHUzaEtYdVN5MWErRlY3bVBwNWJMYSt1SU1HZWoyQ25uTytqSDVwQnhRQ0dWb0ZuRjFDQ2FBaE5xSkdSbWc9IiwibWFjIjoiOGIxNzY0MmM1MDA5MWUxNWZkMDVjY2Y5OWE4NjRiODNmY2U5MTcwZDE2YTQxMGUxNzk0NjI3OWU5ODI2NzU5YiIsInRhZyI6IiJ9",
+];
 
 // 生成随机5位数字字符串
 const generateRandomComment = (): string => {
@@ -53,6 +62,25 @@ const processArticle = async (articleId: number) => {
 // 完成每日任务
 const fn = async () => {
   try {
+    // 遍历 articleToken，依次分享文章
+    const tokens = articleToken.filter(
+      (t): t is string => typeof t === "string",
+    );
+    console.log(`开始分享文章，共 ${tokens.length} 个 token...\n`);
+    for (let i = 0; i < tokens.length; i++) {
+      try {
+        await shareArticle({ s_t: tokens[i] });
+        console.log(`✓ 分享文章成功 (${i + 1}/${tokens.length})`);
+      } catch (error) {
+        console.error(`✗ 分享文章失败 (${i + 1}/${tokens.length}):`, error);
+      }
+      if (i < tokens.length - 1) {
+        console.log("等待 10 秒后分享下一篇...\n");
+        await sleep(10000);
+      }
+    }
+    console.log("分享文章完成！\n");
+
     console.log("开始获取文章列表...\n");
     const [articleRes, videoRes] = await Promise.all([
       getArticleList({ page: 1 }),
