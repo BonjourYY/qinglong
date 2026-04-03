@@ -12,6 +12,7 @@ import {
   likeArticle,
   commentArticle,
   shareArticle,
+  checkIn,
 } from "../api/index.ts";
 // 延迟函数
 const sleep = (ms: number): Promise<void> => {
@@ -89,6 +90,9 @@ const processArticle = async (articleId: string, articleTitle: string) => {
 // 完成每日任务
 const fn = async () => {
   try {
+    console.log("开始签到...\n");
+    await checkIn();
+
     console.log("开始获取文章列表...\n");
     const [articleRes, videoRes] = await Promise.all([
       getArticleList({ page: 1 }),
