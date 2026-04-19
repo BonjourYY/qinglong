@@ -91,7 +91,9 @@ const processArticle = async (articleId: string, articleTitle: string) => {
 const fn = async () => {
   try {
     console.log("开始签到...\n");
-    await checkIn();
+    await checkIn().catch((err) => {
+      console.error("✗ 签到失败，跳过并继续执行后续任务:", err);
+    });
 
     console.log("开始获取文章列表...\n");
     const [articleRes, videoRes] = await Promise.all([
