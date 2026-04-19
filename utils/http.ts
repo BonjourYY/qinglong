@@ -40,7 +40,7 @@ HTTP.interceptors.response.use(
       `HTTP Error ${error.response.status}:`,
       JSON.stringify(error.response.data, null, 2),
     );
-    process.exit(1);
+    return Promise.reject(error);
   },
 );
 
