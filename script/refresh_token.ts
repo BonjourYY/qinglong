@@ -15,8 +15,8 @@ const getPassword = QLAPI.getEnvs({ searchValue: "cg_password" }).then((x) => {
 });
 
 const refresToken = async () => {
-  await getUsername();
-  await getPassword();
+  await getUsername;
+  await getPassword;
   const res = await fetch("https://uc.cztv.tv/api/auth/login/pwd", {
     method: "POST",
     body: JSON.stringify({
