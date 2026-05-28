@@ -3,22 +3,6 @@ import { PaginatedListResponse } from "./type.ts";
 
 // https://kcz.cztv.tv/api/v1
 
-// 登录
-export const login = () => {
-  return fetch("https://uc.cztv.tv/api/auth/login/pwd", {
-    method: "POST",
-    body: JSON.stringify({
-      username: QLAPI.getEnvs({ searchValue: "cg_username" }).then((x) => {
-        return x.data[0].value;
-      }),
-      password: QLAPI.getEnvs({ searchValue: "cg_password" }).then((x) => {
-        return x.data[0].value;
-      }),
-      with_applications: 1,
-    }),
-  });
-};
-
 // 签到
 export const checkIn = () => {
   return HTTP.post("user/checkin", { client_id: "rongmei" });
