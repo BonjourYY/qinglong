@@ -25,7 +25,15 @@ const refresToken = async () => {
     }).toString(),
   });
   const data = await res.json();
-  console.log(data);
+
+  await Promise.all([
+    QLAPI.updateEnv({
+      name: "cg_token",
+      value: data.data.access_token_for_clients["2024110112345678"],
+    }),
+  ]);
+
+  console.log(data.data.access_token_for_clients["2024110112345678"]);
 };
 
 refresToken();
