@@ -25,15 +25,26 @@ const refresToken = async () => {
     }).toString(),
   });
   const data = await res.json();
+  const token = data.data.access_token_for_clients["2024110112345678"];
 
-  await Promise.all([
-    QLAPI.updateEnv({
+  const tokenRes = await QLAPI.getEnvs({ searchValue: "cg_token" });
+  const tokenEnv = tokenRes.data.find((x: any) => x.name === "cg_token");
+  if (!tokenEnv) {
+    throw new Error("cg_token env not found");
+  }
+
+  await QLAPI.updateEnv({
+    env: {
+      id: tokenEnv.id,
       name: "cg_token",
-      value: data.data.access_token_for_clients["2024110112345678"],
-    }),
-  ]);
+      value: token,
+      remarks: new Date().toLocaleString("zh-CN", {
+        timeZone: "Asia/Shanghai",
+      }),
+    },
+  });
 
-  console.log(data.data.access_token_for_clients["2024110112345678"]);
+  console.log(token);
 };
 
 refresToken();
