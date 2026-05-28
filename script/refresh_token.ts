@@ -15,11 +15,14 @@ const refresToken = async () => {
 
   const res = await fetch("https://uc.cztv.tv/api/auth/login/pwd", {
     method: "POST",
-    body: JSON.stringify({
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
       username,
       password,
-      with_applications: 1,
-    }),
+      with_applications: "1",
+    }).toString(),
   });
   const data = await res.json();
   console.log(data);
