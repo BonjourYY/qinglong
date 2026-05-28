@@ -19,3 +19,5 @@ const refresToken = async () => {
   const data = await res.json();
   console.log(data);
 };
+
+refresToken();
