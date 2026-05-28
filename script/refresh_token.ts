@@ -3,23 +3,21 @@
  * new Env('刷新常观 Token');
  */
 
-let username: string;
-let password: string;
-
-QLAPI.getEnvs({ searchValue: "cg_username" }).then((x) => {
-  username = x.data[0].value;
-});
-
-QLAPI.getEnvs({ searchValue: "cg_password" }).then((x) => {
-  password = x.data[0].value;
-});
-
 const refresToken = async () => {
+  const [usernameRes, passwordRes] = await Promise.all([
+    QLAPI.getEnvs({ searchValue: "cg_username" }),
+    QLAPI.getEnvs({ searchValue: "cg_password" }),
+  ]);
+  const username = usernameRes.data[0].value;
+  const password = passwordRes.data[0].value;
+
+  console.log(username, password);
+
   const res = await fetch("https://uc.cztv.tv/api/auth/login/pwd", {
     method: "POST",
     body: JSON.stringify({
-      username: username,
-      password: password,
+      username,
+      password,
       with_applications: 1,
     }),
   });
