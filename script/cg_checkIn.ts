@@ -14,6 +14,7 @@ import {
   shareArticle,
   checkIn,
 } from "../api/index.ts";
+import { getComment } from "../utils/comment.ts";
 // 延迟函数
 const sleep = (ms: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -77,9 +78,18 @@ const processArticle = async (articleId: string, articleTitle: string) => {
     await likeArticle({ articleId });
     console.log(`✓ 点赞文章成功: ${articleId}`);
 
-    // 评论文章（使用文章标题作为评论内容）
-    await commentArticle({ articleId }, { content: articleTitle });
-    console.log(`✓ 评论文章成功: ${articleId}, 评论内容: ${articleTitle}`);
+    // 评论文章（AI 根据文章内容生成评论，失败时降级使用文章标题）
+    const articleContent = (detail?.data?.data?.content ?? "")
+      .replace(/<[^>]+>/g, "")
+      .trim();
+    let comment = articleTitle;
+    try {
+      comment = await getComment(articleTitle, articleContent);
+    } catch (error) {
+      console.error(`✗ AI 生成评论失败，降级使用文章标题: ${articleId}`, error);
+    }
+    await commentArticle({ articleId }, { content: comment });
+    console.log(`✓ 评论文章成功: ${articleId}, 评论内容: ${comment}`);
 
     console.log(`文章 ${articleId} 处理完成\n`);
   } catch (error) {
